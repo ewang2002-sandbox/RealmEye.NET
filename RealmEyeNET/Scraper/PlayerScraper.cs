@@ -1,12 +1,9 @@
 ﻿// NOTE: everything is relative to OuterHtml, NOT InnerHtml 
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Net;
-using System.Text.RegularExpressions;
 using HtmlAgilityPack;
 using RealmEyeNET.Definition;
 using ScrapySharp.Extensions;
@@ -17,17 +14,17 @@ namespace RealmEyeNET.Scraper
 {
 	public class PlayerScraper
 	{
-		public static ScrapingBrowser Browser = new ScrapingBrowser();
+		public static ScrapingBrowser Browser = new ScrapingBrowser
+		{
+			AllowAutoRedirect = true,
+			AllowMetaRedirect = true
+		};
+
 		public string PlayerName { get; }
 
 		public PlayerScraper(string name)
 		{
 			PlayerName = name;
-			Browser = new ScrapingBrowser
-			{
-				AllowAutoRedirect = true,
-				AllowMetaRedirect = true
-			};
 		}
 
 		/// <summary>
@@ -103,11 +100,13 @@ namespace RealmEyeNET.Scraper
 			returnData.Description[1] = descriptionTable.FirstChild.NextSibling.InnerText;
 			returnData.Description[2] = descriptionTable.FirstChild.NextSibling.NextSibling.InnerText;
 
-			// set defaults
-
 			return returnData;
 		}
 
+		/// <summary>
+		/// Scrapes character information.
+		/// </summary>
+		/// <returns>Character data.</returns>
 		public CharacterData ScrapCharacterInformation()
 		{
 			var data = new CharacterData
@@ -214,7 +213,146 @@ namespace RealmEyeNET.Scraper
 				});
 			}
 
+			// TODO get last seen location for characters
 			return data;
+		}
+
+		/// <summary>
+		/// Scrapes pet yard data.
+		/// </summary>
+		/// <returns>The player's pets.</returns>
+		public PetYardData ScrapPetYard()
+		{
+			var page = Browser.NavigateToPage(new Uri($"{PetYardUrl}/{PlayerName}"));
+			// figure this out
+			var mainElem = page.Html.CssSelect(".col-md-12").First();
+			if (mainElem == null)
+				return new PetYardData
+				{
+					IsPrivate = true,
+					Pets = new List<PetEntry>()
+				};
+
+			var petsPrivateTag = mainElem.SelectSingleNode("//div[@class='col-md-12']/h3");
+			if (mainElem.SelectSingleNode("//div[@class='col-md-12']/h3") != null
+				&& petsPrivateTag.InnerText == "Pets are hidden.")
+			{
+				return new PetYardData
+				{
+					IsPrivate = true,
+					Pets = new List<PetEntry>()
+				};
+			}
+
+			var petTable = page.Html
+				.CssSelect("#e")
+				.First()
+				// <tbody><tr>
+				.SelectNodes("tbody/tr");
+
+			var returnData = new PetYardData
+			{
+				IsPrivate = false,
+				Pets = new List<PetEntry>()
+			};
+			// td[1] => span class, data-item
+			// td[2] => name of pet
+			// td[3] => rarity 
+			// td[4] => family
+			// depends on locked/unlocked
+			// td[5] => first ability 
+			// td[6] => first ability stats
+			// td[7] => second ability
+			// td[7] => second ability stats
+			// td[8] => third ability 
+			foreach (var petRow in petTable)
+			{
+				var maxLevel = int.Parse(petRow.SelectNodes("td")
+					.Last()
+					.InnerText);
+				var petId = int.Parse(petRow.SelectSingleNode("td[1]")
+					.FirstChild
+					.Attributes["data-item"]
+					.Value);
+				var petName = petRow.SelectSingleNode("td[2]")
+					.InnerText;
+				var rarity = petRow.SelectSingleNode("td[3]")
+					.InnerText;
+				var family = petRow.SelectSingleNode("td[4]")
+					.InnerText;
+				var rank = petRow.SelectSingleNode("td[5]").InnerText == string.Empty
+					? -1
+					: int.Parse(petRow.SelectSingleNode("td[5]")
+						.InnerText[..^2]);
+				// td[6] start of ability 
+				// will always be unlocked
+				IList<PetAbilityData> petAbility = new List<PetAbilityData>();
+				var firstAbilityName = petRow.SelectSingleNode("td[6]")
+					.FirstChild
+					.InnerText;
+				var firstAbilityLevel = int.Parse(petRow.SelectSingleNode("td[7]")
+					.FirstChild
+					.InnerText);
+				petAbility.Add(new PetAbilityData
+				{
+					AbilityName = firstAbilityName,
+					IsMaxed = firstAbilityLevel == maxLevel,
+					Level = firstAbilityLevel,
+					IsUnlocked = true
+				});
+
+				// get 2nd ability + 
+				for (int i = 8; i < petRow.SelectNodes("td").Count; i++)
+				{
+					var ability = petRow.SelectSingleNode($"td[{i}]");
+					if (ability.InnerText == string.Empty)
+						continue;
+					
+					if (!ability.CssSelect(".pet-ability-disabled").Any())
+					{
+						// ability exists and is unlocked!
+						var nameOfAbility = ability.FirstChild.InnerText;
+						++i;
+						var abilityLvl = int.Parse(petRow.SelectSingleNode($"td[{i}]")
+							.FirstChild
+							.InnerText);
+						petAbility.Add(new PetAbilityData
+						{
+							AbilityName = nameOfAbility,
+							IsMaxed = abilityLvl == maxLevel,
+							Level = abilityLvl,
+							IsUnlocked = true
+						});
+
+					}
+					else
+					{
+						// locked ability
+						var nameOfAbility = ability.FirstChild.InnerText;
+						petAbility.Add(new PetAbilityData
+						{
+							AbilityName = nameOfAbility,
+							IsMaxed = false,
+							Level = -1,
+							IsUnlocked = false
+						});
+
+					}
+				}
+
+				returnData.Pets.Add(new PetEntry
+				{
+					ActivePetSkinId = petId,
+					Family = family,
+					MaxLevel = maxLevel,
+					Name = petName,
+					PetAbilities = petAbility.ToArray(),
+					Place = rank,
+					Rarity = rarity
+				});
+			}
+
+			return returnData;
 		}
 	}
 }

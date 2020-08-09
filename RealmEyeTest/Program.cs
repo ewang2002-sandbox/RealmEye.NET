@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Caching.Hosting;
 using RealmEyeNET.Scraper;
 
 namespace RealmEyeTest
@@ -7,8 +8,7 @@ namespace RealmEyeTest
 	{
 		static void Main(string[] args)
 		{
-			new PlayerScraper("consolemc")
-				.ScrapCharacterInformation();
+
 		}
 	}
 }

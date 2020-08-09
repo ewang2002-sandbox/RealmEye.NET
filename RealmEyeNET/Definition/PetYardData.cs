@@ -10,18 +10,21 @@ namespace RealmEyeNET.Definition
 
 	public struct PetEntry
 	{
-		public string ActivePetSkin;
+		// TODO make this into readable str
+		public int ActivePetSkinId;
 		public string Name;
 		public string Rarity;
 		public string Family;
 		public int Place;
 		public PetAbilityData[] PetAbilities;
+		public int MaxLevel; 
 	}
 
 	public struct PetAbilityData
 	{
+		public bool IsUnlocked; 
 		public string AbilityName;
 		public int Level;
-		public bool IsMaxed; 
+		public bool IsMaxed;
 	}
 }
