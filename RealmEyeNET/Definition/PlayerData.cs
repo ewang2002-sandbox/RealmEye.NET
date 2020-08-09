@@ -1,8 +1,9 @@
 ﻿namespace RealmEyeNET.Definition
 {
-	public struct PlayerData
+	public class PlayerData
 	{
-		public int Characters;
+		public string Name; 
+		public int CharacterCount;
 		public int Skins;
 		public int Fame;
 		public int Exp;
@@ -13,6 +14,9 @@
 		public string FirstSeen;
 		public string Created;
 		public string LastSeen;
-		public string[] Description; 
+		public string[] Description;
+		public bool IsHiddenOrErrored;
+
+		public PlayerData() => CharacterCount = -1;
 	}
 }
