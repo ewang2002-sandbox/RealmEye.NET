@@ -2,9 +2,10 @@
 {
 	public struct GraveyardSummaryData
 	{
+		public bool IsPrivate;
 		public int MaxedStats;
 		public int BaseFame;
-		public GraveyardSummaryProperty[] Properties; 
+		public GraveyardSummaryProperty[] Properties;
 	}
 
 	public struct GraveyardSummaryProperty

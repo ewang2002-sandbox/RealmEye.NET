@@ -1,16 +1,25 @@
-﻿namespace RealmEyeNET.Definition
+﻿using System.Collections.Generic;
+
+namespace RealmEyeNET.Definition
 {
 	public struct CharacterData
+	{
+		public bool IsPrivate;
+		public IList<CharacterEntry> Characters;
+	}
+
+	public struct CharacterEntry
 	{
 		public string CharacterType;
 		public int Level;
 		public int ClassQuestsCompleted;
 		public int Fame;
-		public int Experience;
+		public long Experience;
 		public int Place;
-		public EquipmentData[] EquipmentData;
+		public string[] EquipmentData;
 		public bool HasBackpack;
-		public Stats Stats; 
+		public Stats Stats;
+		public int StatsMaxed;
 	}
 
 	public struct Stats
@@ -23,13 +32,5 @@
 		public int Vitality;
 		public int Wisdom;
 		public int Dexterity;
-		public int StatsMaxed;
-	}
-
-	public struct EquipmentData
-	{
-		public string ItemName;
-		public string ItemType;
-		public string Tier;
 	}
 }

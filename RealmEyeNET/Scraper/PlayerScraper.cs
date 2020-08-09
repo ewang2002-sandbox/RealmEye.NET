@@ -1,8 +1,11 @@
-﻿using System;
+﻿// NOTE: everything is relative to OuterHtml, NOT InnerHtml 
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Net;
 using System.Text.RegularExpressions;
 using HtmlAgilityPack;
 using RealmEyeNET.Definition;
@@ -101,31 +104,117 @@ namespace RealmEyeNET.Scraper
 			returnData.Description[2] = descriptionTable.FirstChild.NextSibling.NextSibling.InnerText;
 
 			// set defaults
-			
+
 			return returnData;
 		}
 
-		public IList<CharacterData> ScrapCharacterInformation()
+		public CharacterData ScrapCharacterInformation()
 		{
-			var charList = new List<CharacterData>();
+			var data = new CharacterData
+			{
+				IsPrivate = true,
+				Characters = new List<CharacterEntry>()
+			};
 
 			var page = Browser.NavigateToPage(new Uri($"{PlayerUrl}/{PlayerName}"));
 			var summaryTable = page.Html.CssSelect(".summary").First();
 
-			bool isPrivate = true;
 			foreach (var row in summaryTable.SelectNodes("tr"))
 			{
 				foreach (var col in row.SelectNodes("td[1]"))
 				{
-					if (col.InnerText == "Characters")
-						isPrivate = false;
+					if (col.InnerText != "Characters")
+						continue;
+					data.IsPrivate = false;
+					if (int.TryParse(col.NextSibling.InnerText, out var result))
+						if (result == 0)
+							return data;
 				}
 			}
 
-			if (isPrivate)
-				return charList;
+			if (data.IsPrivate)
+				return data;
 
+			var charTable = page.Html
+				.CssSelect("#e")
+				.First()
+				// <tbody><tr>
+				.SelectNodes("tbody/tr");
 
+			// td[3] => character type
+			// td[4] => level
+			// td[5] => cqc
+			// td[6] => fame
+			// td[7] => exp
+			// td[8] => place
+			// td[9] => equipment
+			// td[10] => stats
+			foreach (var characterRow in charTable)
+			{
+				string characterType = characterRow.SelectSingleNode("td[3]").InnerText;
+				int level = int.Parse(characterRow.SelectSingleNode("td[4]").InnerText);
+				int cqc = int.Parse(characterRow.SelectSingleNode("td[5]").InnerText.Split('/')[0]);
+				int fame = int.Parse(characterRow.SelectSingleNode("td[6]").InnerText);
+				long exp = long.Parse(characterRow.SelectSingleNode("td[7]").InnerText);
+				int place = int.Parse(characterRow.SelectSingleNode("td[8]").InnerText);
+
+				IList<string> characterEquipment = new List<string>();
+				var equips = characterRow
+					.SelectSingleNode("td[9]")
+					// <span class="item-wrapper">...
+					.ChildNodes;
+				for (int i = 0; i < 4; i++)
+				{
+					// equips[i] -> everything inside <span class="item-wrapper">
+					var itemContainer = equips[i].ChildNodes[0];
+					characterEquipment.Add(itemContainer.ChildNodes.Count == 0
+						? "Empty Slot"
+						: WebUtility.HtmlDecode(itemContainer.ChildNodes[0].Attributes["title"].Value));
+				}
+
+				// <span class = "player-stats" ...
+				var stats = characterRow
+					.SelectSingleNode("td[10]");
+				int maxedStats = int.Parse(stats.InnerText.Split('/')[0]);
+				int[] dataStats = stats.FirstChild
+					.Attributes["data-stats"]
+					.Value[1..^1]
+					.Split(',')
+					.Select(int.Parse)
+					.ToArray();
+				int[] bonusStats = stats.FirstChild
+					.Attributes["data-bonuses"]
+					.Value[1..^1]
+					.Split(',')
+					.Select(int.Parse)
+					.ToArray();
+
+				data.Characters.Add(new CharacterEntry
+				{
+					CharacterType = characterType,
+					ClassQuestsCompleted = cqc,
+					EquipmentData = characterEquipment.ToArray(),
+					Experience = exp,
+					Fame = fame,
+					HasBackpack = equips.Count == 5,
+					Level = level,
+					Place = place,
+					StatsMaxed = maxedStats,
+					Stats = new Stats
+					{
+						Health = dataStats[0] - bonusStats[0],
+						Magic = dataStats[1] - bonusStats[1],
+						Attack = dataStats[2] - bonusStats[2],
+						Defense = dataStats[3] - bonusStats[3],
+						Speed = dataStats[4] - bonusStats[4],
+						Vitality = dataStats[5] - bonusStats[5],
+						Wisdom = dataStats[6] - bonusStats[6],
+						Dexterity = dataStats[7] - bonusStats[7]
+					}
+				});
+			}
+
+			return data;
 		}
 	}
 }

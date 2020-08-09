@@ -1,6 +1,14 @@
-﻿namespace RealmEyeNET.Definition
+﻿using System.Collections.Generic;
+
+namespace RealmEyeNET.Definition
 {
 	public struct GraveyardData
+	{
+		public bool IsPrivate;
+		public IList<GraveyardEntry> Graveyard; 
+	}
+
+	public struct GraveyardEntry
 	{
 		public string DiedOn;
 		public string Character;
@@ -11,6 +19,6 @@
 		public string[] Equipment;
 		public int MaxedStats;
 		public string KilledBy;
-		public bool HadBackpack; 
+		public bool HadBackpack;
 	}
 }

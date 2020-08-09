@@ -7,6 +7,8 @@ namespace RealmEyeTest
 	{
 		static void Main(string[] args)
 		{
+			new PlayerScraper("consolemc")
+				.ScrapCharacterInformation();
 		}
 	}
 }
