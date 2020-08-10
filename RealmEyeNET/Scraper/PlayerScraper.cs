@@ -150,12 +150,12 @@ namespace RealmEyeNET.Scraper
 			// td[10] => stats
 			foreach (var characterRow in charTable)
 			{
-				string characterType = characterRow.SelectSingleNode("td[3]").InnerText;
-				int level = int.Parse(characterRow.SelectSingleNode("td[4]").InnerText);
-				int cqc = int.Parse(characterRow.SelectSingleNode("td[5]").InnerText.Split('/')[0]);
-				int fame = int.Parse(characterRow.SelectSingleNode("td[6]").InnerText);
-				long exp = long.Parse(characterRow.SelectSingleNode("td[7]").InnerText);
-				int place = int.Parse(characterRow.SelectSingleNode("td[8]").InnerText);
+				var characterType = characterRow.SelectSingleNode("td[3]").InnerText;
+				var level = int.Parse(characterRow.SelectSingleNode("td[4]").InnerText);
+				var cqc = int.Parse(characterRow.SelectSingleNode("td[5]").InnerText.Split('/')[0]);
+				var fame = int.Parse(characterRow.SelectSingleNode("td[6]").InnerText);
+				var exp = long.Parse(characterRow.SelectSingleNode("td[7]").InnerText);
+				var place = int.Parse(characterRow.SelectSingleNode("td[8]").InnerText);
 
 				IList<string> characterEquipment = new List<string>();
 				var equips = characterRow
@@ -174,14 +174,14 @@ namespace RealmEyeNET.Scraper
 				// <span class = "player-stats" ...
 				var stats = characterRow
 					.SelectSingleNode("td[10]");
-				int maxedStats = int.Parse(stats.InnerText.Split('/')[0]);
-				int[] dataStats = stats.FirstChild
+				var maxedStats = int.Parse(stats.InnerText.Split('/')[0]);
+				var dataStats = stats.FirstChild
 					.Attributes["data-stats"]
 					.Value[1..^1]
 					.Split(',')
 					.Select(int.Parse)
 					.ToArray();
-				int[] bonusStats = stats.FirstChild
+				var bonusStats = stats.FirstChild
 					.Attributes["data-bonuses"]
 					.Value[1..^1]
 					.Split(',')
@@ -235,7 +235,7 @@ namespace RealmEyeNET.Scraper
 
 			var petsPrivateTag = mainElem.SelectSingleNode("//div[@class='col-md-12']/h3");
 			if (mainElem.SelectSingleNode("//div[@class='col-md-12']/h3") != null
-				&& petsPrivateTag.InnerText == "Pets are hidden.")
+			    && petsPrivateTag.InnerText == "Pets are hidden.")
 			{
 				return new PetYardData
 				{
@@ -307,7 +307,7 @@ namespace RealmEyeNET.Scraper
 					var ability = petRow.SelectSingleNode($"td[{i}]");
 					if (ability.InnerText == string.Empty)
 						continue;
-					
+
 					if (!ability.CssSelect(".pet-ability-disabled").Any())
 					{
 						// ability exists and is unlocked!
@@ -323,7 +323,6 @@ namespace RealmEyeNET.Scraper
 							Level = abilityLvl,
 							IsUnlocked = true
 						});
-
 					}
 					else
 					{
@@ -336,7 +335,6 @@ namespace RealmEyeNET.Scraper
 							Level = -1,
 							IsUnlocked = false
 						});
-
 					}
 				}
 
@@ -351,6 +349,136 @@ namespace RealmEyeNET.Scraper
 					Rarity = rarity
 				});
 			}
+
+			return returnData;
+		}
+
+		/// <summary>
+		/// Scraps the graveyard.
+		/// </summary>
+		/// <param name="limit">The maximum number of dead characters to get.</param>
+		/// <returns>The graveyard.</returns>
+		public GraveyardData ScrapGraveyard(int limit = -1)
+		{
+			var page = Browser.NavigateToPage(new Uri($"{GraveyardUrl}/{PlayerName}"));
+			// TODO account for hidden profile
+
+			var colMd = page.Html.CssSelect(".col-md-12").First();
+			if (colMd == null)
+				return new GraveyardData
+				{
+					IsPrivate = true,
+					NoDataAvailable = false,
+					Graveyard = new List<GraveyardEntry>()
+				};
+
+			// this probably isnt the best way
+			// to do it.
+			var gyInfoPara = colMd.SelectSingleNode("//div[@class='col-md-12']/p/text()");
+			var gyInfoHead = colMd.SelectSingleNode("//div[@class='col-md-12']/h3/text()");
+
+			if (gyInfoHead != null && gyInfoHead.InnerText == "No data available yet.")
+				return new GraveyardData
+				{
+					Graveyard = new List<GraveyardEntry>(),
+					IsPrivate = false,
+					NoDataAvailable = true
+				};
+
+			var numGraveyards = 0;
+			if (gyInfoPara != null && !gyInfoPara.InnerText.Contains("We haven"))
+				numGraveyards = int.Parse(gyInfoPara.InnerText.Split("graves")[0]
+					.Split("found")[1]
+					.Replace(",", "")
+					.Trim());
+
+			// no graveyard data
+			if (numGraveyards == 0)
+				return new GraveyardData
+				{
+					IsPrivate = false,
+					NoDataAvailable = true,
+					Graveyard = new List<GraveyardEntry>()
+				};
+
+			var lowestPossibleAmt = Math.Floor((double)numGraveyards / 100) * 100;
+			if (limit != -1 && limit <= numGraveyards)
+				lowestPossibleAmt = Math.Floor((double) limit / 100) * 100;
+
+			var returnData = new GraveyardData
+			{
+				IsPrivate = false,
+				Graveyard = new List<GraveyardEntry>()
+			};
+
+			// iterate over each page in the damn website :( 
+			for (int index = 1; index <= lowestPossibleAmt + 1; index += 100)
+			{
+				if (index != 1)
+					page = Browser.NavigateToPage(new Uri($"{GraveyardUrl}/{PlayerName}/{index}"));
+
+				var graveyardTable = page.Html
+					.CssSelect(".table-responsive")
+					.CssSelect(".table")
+					.First()
+					// <tbody><tr>
+					.SelectNodes("tbody/tr");
+
+				// td[1] => date
+				// td[2] => garbage
+				// td[3] => class name
+				// td[4] => level
+				// td[5] => base fame
+				// td[6] => total fame 
+				// td[7] => exp
+				// td[8] => items
+				// td[9] => stats
+				// td[10] => died to
+				foreach (var gyRow in graveyardTable)
+				{
+					var diedOn = gyRow.SelectSingleNode("td[1]").InnerText;
+					var character = gyRow.SelectSingleNode("td[3]").InnerText;
+					var level = int.Parse(gyRow.SelectSingleNode("td[4]").InnerText);
+					var baseFame = int.Parse(gyRow.SelectSingleNode("td[5]").InnerText);
+					var totalFame = int.Parse(gyRow.SelectSingleNode("td[6]").FirstChild.InnerText);
+					var exp = long.Parse(gyRow.SelectSingleNode("td[7]").InnerText);
+
+					IList<string> characterEquipment = new List<string>();
+					var equips = gyRow
+						.SelectSingleNode("td[8]")
+						// <span class="item-wrapper">...
+						.ChildNodes;
+					for (int i = 0; i < 4; i++)
+					{
+						// equips[i] -> everything inside <span class="item-wrapper">
+						var itemContainer = equips[i].ChildNodes[0];
+						characterEquipment.Add(itemContainer.ChildNodes.Count == 0
+							? "Empty Slot"
+							: WebUtility.HtmlDecode(itemContainer.ChildNodes[0].Attributes["title"].Value));
+					}
+
+					var hadBackpack = equips.Count == 5;
+					var statsMaxed = int.Parse(gyRow.SelectSingleNode("td[9]").FirstChild.InnerText.Split('/')[0]);
+					var diedTo = gyRow.SelectSingleNode("td[10]").InnerText;
+
+					returnData.Graveyard.Add(new GraveyardEntry
+					{
+						DiedOn = diedOn,
+						BaseFame = baseFame,
+						Character = character,
+						Equipment = characterEquipment.ToArray(),
+						Experience = exp,
+						HadBackpack = hadBackpack,
+						KilledBy = diedTo,
+						Level = level,
+						MaxedStats = statsMaxed,
+						TotalFame = totalFame
+					});
+				}
+			}
+
+			if (limit != -1)
+				returnData.Graveyard = returnData.Graveyard.Take(limit).ToArray();
 
 			return returnData;
 		}

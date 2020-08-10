@@ -5,6 +5,7 @@ namespace RealmEyeNET.Definition
 	public struct GraveyardData
 	{
 		public bool IsPrivate;
+		public bool NoDataAvailable; 
 		public IList<GraveyardEntry> Graveyard; 
 	}
 
@@ -15,7 +16,7 @@ namespace RealmEyeNET.Definition
 		public int Level;
 		public int BaseFame;
 		public int TotalFame;
-		public int Experience;
+		public long Experience;
 		public string[] Equipment;
 		public int MaxedStats;
 		public string KilledBy;
