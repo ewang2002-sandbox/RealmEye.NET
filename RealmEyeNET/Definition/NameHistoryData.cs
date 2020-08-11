@@ -2,16 +2,16 @@
 
 namespace RealmEyeNET.Definition
 {
-	public struct NameHistoryData
+	public class NameHistoryData
 	{
-		public bool IsPrivate;
-		public IList<NameHistoryEntry> NameHistory; 
+		public bool IsPrivate { get; set; }
+		public IList<NameHistoryEntry> NameHistory { get; set; }
 	}
 
-	public struct NameHistoryEntry
+	public class NameHistoryEntry
 	{
-		public string Name;
-		public string From;
-		public string To;
+		public string Name { get; set; }
+		public string From { get; set; }
+		public string To { get; set; }
 	}
 }

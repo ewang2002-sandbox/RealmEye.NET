@@ -1,19 +1,36 @@
 ﻿namespace RealmEyeNET.Definition
 {
-	public struct GraveyardSummaryData
+	public class GraveyardSummaryData
 	{
-		public bool IsPrivate;
-		public int MaxedStats;
-		public int BaseFame;
-		public GraveyardSummaryProperty[] Properties;
+		public bool IsPrivate { get; set; }
+		public GraveyardSummaryProperty[] Properties { get; set; }
+		public GraveyardTechnicalProperty[] TechnicalProperties { get; set; }
+		public MaxedStatsByCharacters[] StatsCharacters { get; set; }
 	}
 
-	public struct GraveyardSummaryProperty
+	public class MaxedStatsByCharacters
 	{
-		public string Achievement;
-		public int Total;
-		public int Max;
-		public double Average;
-		public int Min; 
+		public string CharacterType { get; set; }
+		// Stats[0] = 0/8; Stats[8] = 8/8
+		public int[] Stats { get; set; }
+		public int Total { get; set; }
+	}
+
+	public class GraveyardSummaryProperty
+	{
+		public string Achievement { get; set; }
+		public long Total { get; set; }
+		public long Max { get; set; }
+		public double Average { get; set; }
+		public long Min { get; set; }
+	}
+
+	public class GraveyardTechnicalProperty
+	{
+		public string Achievement { get; set; }
+		public string Total { get; set; }
+		public string Max { get; set; }
+		public string Average { get; set; }
+		public string Min { get; set; }
 	}
 }

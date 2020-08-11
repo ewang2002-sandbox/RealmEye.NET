@@ -2,24 +2,25 @@
 
 namespace RealmEyeNET.Definition
 {
-	public struct GraveyardData
+	public class GraveyardData
 	{
-		public bool IsPrivate;
-		public bool NoDataAvailable; 
-		public IList<GraveyardEntry> Graveyard; 
+		public int GraveyardCount { get; set; }
+		public bool IsPrivate { get; set; }
+		public bool NoDataAvailable { get; set; }
+		public IList<GraveyardEntry> Graveyard { get; set; }
 	}
 
-	public struct GraveyardEntry
+	public class GraveyardEntry
 	{
-		public string DiedOn;
-		public string Character;
-		public int Level;
-		public int BaseFame;
-		public int TotalFame;
-		public long Experience;
-		public string[] Equipment;
-		public int MaxedStats;
-		public string KilledBy;
-		public bool HadBackpack;
+		public string DiedOn { get; set; }
+		public string Character { get; set; }
+		public int Level { get; set; }
+		public int BaseFame { get; set; }
+		public int TotalFame { get; set; }
+		public long Experience { get; set; }
+		public string[] Equipment { get; set; }
+		public int MaxedStats { get; set; }
+		public string KilledBy { get; set; }
+		public bool HadBackpack { get; set; }
 	}
 }

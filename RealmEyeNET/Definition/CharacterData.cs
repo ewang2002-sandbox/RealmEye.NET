@@ -2,27 +2,27 @@
 
 namespace RealmEyeNET.Definition
 {
-	public struct CharacterData
+	public class CharacterData
 	{
-		public bool IsPrivate;
-		public IList<CharacterEntry> Characters;
+		public bool IsPrivate { get; set; }
+		public IList<CharacterEntry> Characters { get; set; }
 	}
 
-	public struct CharacterEntry
+	public class CharacterEntry
 	{
-		public string CharacterType;
-		public int Level;
-		public int ClassQuestsCompleted;
-		public int Fame;
-		public long Experience;
-		public int Place;
-		public string[] EquipmentData;
-		public bool HasBackpack;
-		public Stats Stats;
-		public int StatsMaxed;
+		public string CharacterType { get; set; }
+		public int Level { get; set; }
+		public int ClassQuestsCompleted { get; set; }
+		public int Fame { get; set; }
+		public long Experience { get; set; }
+		public int Place { get; set; }
+		public string[] EquipmentData { get; set; }
+		public bool HasBackpack { get; set; }
+		public Stats Stats { get; set; }
+		public int StatsMaxed { get; set; }
 	}
 
-	public struct Stats
+	public class Stats
 	{
 		public int Health;
 		public int Magic;

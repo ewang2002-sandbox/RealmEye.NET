@@ -2,15 +2,15 @@
 
 namespace RealmEyeNET.Definition
 {
-	public struct RankHistoryData
+	public class RankHistoryData
 	{
-		public bool IsPrivate;
-		public IList<RankHistoryEntry> RankHistory; 
+		public bool IsPrivate { get; set; }
+		public IList<RankHistoryEntry> RankHistory { get; set; }
 	}
 
-	public struct RankHistoryEntry
+	public class RankHistoryEntry
 	{
-		public int Rank;
-		public string Achieved;
+		public int Rank { get; set; }
+		public string Achieved { get; set; }
 	}
 }

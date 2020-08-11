@@ -2,17 +2,17 @@
 
 namespace RealmEyeNET.Definition
 {
-	public struct GuildHistoryData
+	public class GuildHistoryData
 	{
-		public bool IsPrivate;
-		public IList<GuildHistoryEntry> GuildHistory; 
+		public bool IsPrivate { get; set; }
+		public IList<GuildHistoryEntry> GuildHistory { get; set; }
 	}
 
-	public struct GuildHistoryEntry
+	public class GuildHistoryEntry
 	{
-		public string GuildName;
-		public string GuildRank;
-		public string From;
-		public string To;
+		public string GuildName { get; set; }
+		public string GuildRank { get; set; }
+		public string From { get; set; }
+		public string To { get; set; }
 	}
 }
