@@ -15,8 +15,7 @@
 		public string Created { get; set; }
 		public string LastSeen { get; set; }
 		public string[] Description { get; set; }
-		public bool IsHiddenOrErrored { get; set; }
-
+		public string Status { get; set; }
 		public PlayerData() => CharacterCount = -1;
 	}
 }

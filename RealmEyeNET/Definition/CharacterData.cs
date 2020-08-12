@@ -4,7 +4,7 @@ namespace RealmEyeNET.Definition
 {
 	public class CharacterData
 	{
-		public bool IsPrivate { get; set; }
+		public string Status { get; set; }
 		public IList<CharacterEntry> Characters { get; set; }
 	}
 

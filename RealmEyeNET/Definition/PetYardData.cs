@@ -4,7 +4,7 @@ namespace RealmEyeNET.Definition
 {
 	public struct PetYardData
 	{
-		public bool IsPrivate { get; set; }
+		public string Status { get; set; }
 		public IList<PetEntry> Pets { get; set; }
 	}
 

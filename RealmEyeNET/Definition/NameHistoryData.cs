@@ -4,7 +4,7 @@ namespace RealmEyeNET.Definition
 {
 	public class NameHistoryData
 	{
-		public bool IsPrivate { get; set; }
+		public string Status { get; set; }
 		public IList<NameHistoryEntry> NameHistory { get; set; }
 	}
 

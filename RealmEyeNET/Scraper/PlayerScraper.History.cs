@@ -20,9 +20,15 @@ namespace RealmEyeNET.Scraper
 
 			var returnData = new NameHistoryData
 			{
-				IsPrivate = false,
+				Status = "SUCCESS",
 				NameHistory = new List<NameHistoryEntry>()
 			};
+
+			if (ProfileIsPrivate())
+			{
+				returnData.Status = "PRIVATE_PROFILE";
+				return returnData;
+			}
 
 			var colMd = page.Html.CssSelect(".col-md-12").First();
 			var nameHistExists = colMd.SelectNodes("//div[@class='col-md-12']/p/text()");
@@ -32,7 +38,7 @@ namespace RealmEyeNET.Scraper
 			var hiddenTxtHeader = colMd.SelectSingleNode("//div[@class='col-md-12']/h3/text()");
 			if (hiddenTxtHeader != null && hiddenTxtHeader.InnerText.Contains("Name history is hidden"))
 			{
-				returnData.IsPrivate = true;
+				returnData.Status = "NAME_HISTORY_PRIVATE";
 				return returnData;
 			}
 
@@ -69,16 +75,22 @@ namespace RealmEyeNET.Scraper
 
 			var returnData = new RankHistoryData
 			{
-				IsPrivate = false,
+				Status = "SUCCESS",
 				RankHistory = new List<RankHistoryEntry>()
 			};
+
+			if (ProfileIsPrivate())
+			{
+				returnData.Status = "PRIVATE_PROFILE";
+				return returnData;
+			}
 
 			var colMd = page.Html.CssSelect(".col-md-12").First();
 
 			var hiddenTxtHeader = colMd.SelectSingleNode("//div[@class='col-md-12']/h3/text()");
 			if (hiddenTxtHeader != null && hiddenTxtHeader.InnerText.Contains("Rank history is hidden"))
 			{
-				returnData.IsPrivate = true;
+				returnData.Status = "RANK_HISTORY_PRIVATE";
 				return returnData;
 			}
 
@@ -94,7 +106,7 @@ namespace RealmEyeNET.Scraper
 			foreach (var rankHistEntry in rankHistoryColl)
 			{
 				int rank = int.Parse(rankHistEntry.SelectSingleNode("td[1]").FirstChild.InnerText);
-				string since = rankHistEntry.SelectSingleNode("td[2]").FirstChild.InnerText;
+				string since = rankHistEntry.SelectSingleNode("td[2]").InnerText;
 				string date = rankHistEntry.SelectSingleNode("td[2]").FirstChild.Attributes["title"].Value;
 				returnData.RankHistory.Add(new RankHistoryEntry
 				{
@@ -113,13 +125,19 @@ namespace RealmEyeNET.Scraper
 		/// <returns>The guild history.</returns>
 		public GuildHistoryData ScrapGuildHistory()
 		{
-			var page = Browser.NavigateToPage(new Uri($"{NameHistoryUrl}/{PlayerName}"));
+			var page = Browser.NavigateToPage(new Uri($"{GuildHistoryUrl}/{PlayerName}"));
 
 			var returnData = new GuildHistoryData
 			{
-				IsPrivate = false,
+				Status = "SUCCESS",
 				GuildHistory = new List<GuildHistoryEntry>()
 			};
+
+			if (ProfileIsPrivate())
+			{
+				returnData.Status = "PRIVATE_PROFILE";
+				return returnData;
+			}
 
 			var colMd = page.Html.CssSelect(".col-md-12").First();
 			var guildHistExists = colMd.SelectNodes("//div[@class='col-md-12']/p/text()");
@@ -129,7 +147,7 @@ namespace RealmEyeNET.Scraper
 			var hiddenTxtHeader = colMd.SelectSingleNode("//div[@class='col-md-12']/h3/text()");
 			if (hiddenTxtHeader != null && hiddenTxtHeader.InnerText.Contains("Guild history is hidden"))
 			{
-				returnData.IsPrivate = true;
+				returnData.Status = "GUILD_HISTORY_PRIVATE";
 				return returnData;
 			}
 
@@ -148,7 +166,7 @@ namespace RealmEyeNET.Scraper
 			{
 				returnData.GuildHistory.Add(new GuildHistoryEntry
 				{
-					GuildName = guildHistoryRow.SelectSingleNode("td[1]").FirstChild.Name,
+					GuildName = guildHistoryRow.SelectSingleNode("td[1]").FirstChild.InnerText,
 					GuildRank = guildHistoryRow.SelectSingleNode("td[2]").InnerText,
 					From = guildHistoryRow.SelectSingleNode("td[3]").InnerText,
 					To = guildHistoryRow.SelectSingleNode("td[4]").InnerText

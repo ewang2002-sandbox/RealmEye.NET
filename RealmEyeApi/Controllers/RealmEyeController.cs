@@ -60,6 +60,7 @@ namespace RealmEyeApi.Controllers
 			return new JsonResult(gys);
 		}
 
+		[HttpGet("namehistory/{name}")]
 		public JsonResult GetNameHistory(string name)
 		{
 			var nh = new PlayerScraper(name)
@@ -67,12 +68,15 @@ namespace RealmEyeApi.Controllers
 			return new JsonResult(nh);
 		}
 
+		[HttpGet("guildhistory/{name}")]
 		public JsonResult GetGuildHistory(string name)
 		{
 			var gh = new PlayerScraper(name)
 				.ScrapGuildHistory();
 			return new JsonResult(gh);
 		}
+
+		[HttpGet("rankhistory/{name}")]
 		public JsonResult GetRankHistory(string name)
 		{
 			var rh = new PlayerScraper(name)

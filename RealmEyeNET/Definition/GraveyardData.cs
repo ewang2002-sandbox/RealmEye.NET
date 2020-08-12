@@ -4,9 +4,8 @@ namespace RealmEyeNET.Definition
 {
 	public class GraveyardData
 	{
+		public string Status { get; set; }
 		public int GraveyardCount { get; set; }
-		public bool IsPrivate { get; set; }
-		public bool NoDataAvailable { get; set; }
 		public IList<GraveyardEntry> Graveyard { get; set; }
 	}
 

@@ -1,32 +1,15 @@
-﻿// NOTE: everything is relative to OuterHtml, NOT InnerHtml 
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using HtmlAgilityPack;
 using RealmEyeNET.Definition;
 using ScrapySharp.Extensions;
-using ScrapySharp.Network;
 using static RealmEyeNET.Constants.RealmEyeUrl;
 
 namespace RealmEyeNET.Scraper
 {
 	public partial class PlayerScraper
 	{
-		public static ScrapingBrowser Browser = new ScrapingBrowser
-		{
-			AllowAutoRedirect = true,
-			AllowMetaRedirect = true
-		};
-
-		public string PlayerName { get; }
-
-		public PlayerScraper(string name)
-		{
-			PlayerName = name;
-		}
-
 		/// <summary>
 		/// Scrapes a player's profile. You'll get the basics like character count, fame, experience, description, and more.
 		/// </summary>
@@ -35,29 +18,23 @@ namespace RealmEyeNET.Scraper
 		{
 			var page = Browser.NavigateToPage(new Uri($"{PlayerUrl}/{PlayerName}"));
 			if (page == null)
-			{
 				return new PlayerData
 				{
-					IsHiddenOrErrored = true
+					Status = "CONNECTION_ERROR"
 				};
-			}
 
-			var mainElement = page.Html.CssSelect(".col-md-12");
-
-			var htmlNodes = mainElement as HtmlNode[] ?? mainElement.ToArray();
-			if (htmlNodes.CssSelect(".player-not-found").Count() != 0)
-			{
+			if (ProfileIsPrivate())
 				return new PlayerData
 				{
-					IsHiddenOrErrored = true
+					Status = "PRIVATE_PROFILE"
 				};
-			}
 
 			// profile public
 			// scrap time
 			var returnData = new PlayerData
 			{
-				Name = page.Html.CssSelect(".entity-name").First().InnerText
+				Name = page.Html.CssSelect(".entity-name").First().InnerText,
+				Status = "SUCCESS"
 			};
 
 			var summaryTable = page.Html.CssSelect(".summary").First();
@@ -68,38 +45,57 @@ namespace RealmEyeNET.Scraper
 				// td[2] is the second column (property value) -- e.g. "58 (6349th)
 				foreach (var col in row.SelectNodes("td[1]"))
 				{
-					if (col.InnerText == "Characters")
-						returnData.CharacterCount = int.Parse(col.NextSibling.InnerText);
-					else if (col.InnerText == "Skins")
-						returnData.Skins = int.Parse(col.NextSibling.InnerText.Split('(')[0]);
-					else if (col.InnerText == "Fame")
-						returnData.Fame = int.Parse(col.NextSibling.InnerText.Split('(')[0]);
-					else if (col.InnerText == "Exp")
-						returnData.Exp = int.Parse(col.NextSibling.InnerText.Split('(')[0]);
-					else if (col.InnerText == "Rank")
-						returnData.Rank = int.Parse(col.NextSibling.InnerText);
-					else if (col.InnerText == "Account fame")
-						returnData.AccountFame = int.Parse(col.NextSibling.InnerText.Split('(')[0]);
-					else if (col.InnerText == "Guild")
-						returnData.Guild = col.NextSibling.InnerText;
-					else if (col.InnerText == "Guild Rank")
-						returnData.GuildRank = col.NextSibling.InnerText;
-					else if (col.InnerText == "First seen")
-						returnData.FirstSeen = col.NextSibling.InnerText;
-					else if (col.InnerText == "Last seen")
-						returnData.LastSeen = col.NextSibling.InnerText;
-					else if (col.InnerText == "Created")
-						returnData.Created = col.NextSibling.InnerText;
+					switch (col.InnerText)
+					{
+						case "Characters":
+							returnData.CharacterCount = int.Parse(col.NextSibling.InnerText);
+							break;
+						case "Skins":
+							returnData.Skins = int.Parse(col.NextSibling.InnerText.Split('(')[0]);
+							break;
+						case "Fame":
+							returnData.Fame = int.Parse(col.NextSibling.InnerText.Split('(')[0]);
+							break;
+						case "Exp":
+							returnData.Exp = int.Parse(col.NextSibling.InnerText.Split('(')[0]);
+							break;
+						case "Rank":
+							returnData.Rank = int.Parse(col.NextSibling.InnerText);
+							break;
+						case "Account fame":
+							returnData.AccountFame = int.Parse(col.NextSibling.InnerText.Split('(')[0]);
+							break;
+						case "Guild":
+							returnData.Guild = col.NextSibling.InnerText;
+							break;
+						case "Guild Rank":
+							returnData.GuildRank = col.NextSibling.InnerText;
+							break;
+						case "First seen":
+							returnData.FirstSeen = col.NextSibling.InnerText;
+							break;
+						case "Last seen":
+							returnData.LastSeen = col.NextSibling.InnerText;
+							break;
+						case "Created":
+							returnData.Created = col.NextSibling.InnerText;
+							break;
+					}
 				}
 			}
 
-			returnData.Description = new string[3];
+			var mainElement = page.Html.CssSelect(".col-md-12");
 			// #d is id = "d" (in html)
-			var descriptionTable = htmlNodes.CssSelect("#d").First();
-			// TODO account for no description 
-			returnData.Description[0] = descriptionTable.FirstChild.InnerText;
-			returnData.Description[1] = descriptionTable.FirstChild.NextSibling.InnerText;
-			returnData.Description[2] = descriptionTable.FirstChild.NextSibling.NextSibling.InnerText;
+			var descriptionTable = mainElement.CssSelect("#d").First();
+			if (descriptionTable.FirstChild.Attributes["help"] == null)
+				returnData.Description = new string[0];
+			else
+			{
+				returnData.Description = new string[3];
+				returnData.Description[0] = descriptionTable.FirstChild.InnerText;
+				returnData.Description[1] = descriptionTable.FirstChild.NextSibling.InnerText;
+				returnData.Description[2] = descriptionTable.FirstChild.NextSibling.NextSibling.InnerText;
+			}
 
 			return returnData;
 		}
@@ -112,28 +108,39 @@ namespace RealmEyeNET.Scraper
 		{
 			var data = new CharacterData
 			{
-				IsPrivate = true,
 				Characters = new List<CharacterEntry>()
 			};
+
+			if (ProfileIsPrivate())
+			{
+				data.Status = "PRIVATE_PROFILE";
+				return data;
+			}
 
 			var page = Browser.NavigateToPage(new Uri($"{PlayerUrl}/{PlayerName}"));
 			var summaryTable = page.Html.CssSelect(".summary").First();
 
+			bool charPrivate = true;
 			foreach (var row in summaryTable.SelectNodes("tr"))
 			{
 				foreach (var col in row.SelectNodes("td[1]"))
 				{
 					if (col.InnerText != "Characters")
 						continue;
-					data.IsPrivate = false;
-					if (int.TryParse(col.NextSibling.InnerText, out var result))
-						if (result == 0)
-							return data;
+					charPrivate = false;
+					data.Status = "SUCCESS";
+					if (!int.TryParse(col.NextSibling.InnerText, out var result))
+						continue;
+					if (result == 0)
+						return data;
 				}
 			}
 
-			if (data.IsPrivate)
+			if (charPrivate)
+			{
+				data.Status = "CHARACTERS_PRIVATE";
 				return data;
+			}
 
 			var charTable = page.Html
 				.CssSelect("#e")
@@ -226,25 +233,25 @@ namespace RealmEyeNET.Scraper
 		{
 			var returnData = new PetYardData
 			{
-				IsPrivate = false,
+				Status = "SUCCESS",
 				Pets = new List<PetEntry>()
 			};
 
-			var page = Browser.NavigateToPage(new Uri($"{PetYardUrl}/{PlayerName}"));
-			// figure this out
-			var mainElem = page.Html.CssSelect(".col-md-12").First();
-			if (mainElem == null)
+			if (ProfileIsPrivate())
 			{
-				returnData.IsPrivate = true;
+				returnData.Status = "PRIVATE_PROFILE";
 				return returnData;
 			}
 
+			var page = Browser.NavigateToPage(new Uri($"{PetYardUrl}/{PlayerName}"));
+
+			var mainElem = page.Html.CssSelect(".col-md-12").First();
 			var petsPrivateTag = mainElem.SelectSingleNode("//div[@class='col-md-12']/h3");
 			if (petsPrivateTag != null)
 			{
 				if (petsPrivateTag.InnerText == "Pets are hidden.")
 				{
-					returnData.IsPrivate = true;
+					returnData.Status = "PETS_PRIVATE";
 					return returnData;
 				}
 

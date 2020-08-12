@@ -1,11 +1,13 @@
-﻿namespace RealmEyeNET.Definition
+﻿using System.Collections.Generic;
+
+namespace RealmEyeNET.Definition
 {
 	public class GraveyardSummaryData
 	{
-		public bool IsPrivate { get; set; }
-		public GraveyardSummaryProperty[] Properties { get; set; }
-		public GraveyardTechnicalProperty[] TechnicalProperties { get; set; }
-		public MaxedStatsByCharacters[] StatsCharacters { get; set; }
+		public string Status { get; set; }
+		public IList<GraveyardSummaryProperty> Properties { get; set; }
+		public IList<GraveyardTechnicalProperty> TechnicalProperties { get; set; }
+		public IList<MaxedStatsByCharacters> StatsCharacters { get; set; }
 	}
 
 	public class MaxedStatsByCharacters

@@ -18,30 +18,30 @@ namespace RealmEyeNET.Scraper
 		public GraveyardData ScrapGraveyard(int limit = -1)
 		{
 			var page = Browser.NavigateToPage(new Uri($"{GraveyardUrl}/{PlayerName}"));
+			var returnData = new GraveyardData
+			{
+				Status = "SUCCESS",
+				GraveyardCount = -1,
+				Graveyard = new List<GraveyardEntry>()
+			};
+
+			if (ProfileIsPrivate())
+			{
+				returnData.Status = "PRIVATE_PROFILE";
+				return returnData;
+			}
 
 			var colMd = page.Html.CssSelect(".col-md-12").First();
-			if (colMd == null)
-				return new GraveyardData
-				{
-					IsPrivate = true,
-					NoDataAvailable = false,
-					GraveyardCount = -1,
-					Graveyard = new List<GraveyardEntry>()
-				};
-
 			// this probably isnt the best way
 			// to do it.
 			var gyInfoPara = colMd.SelectSingleNode("//div[@class='col-md-12']/p/text()");
 			var gyInfoHead = colMd.SelectSingleNode("//div[@class='col-md-12']/h3/text()");
 
 			if (gyInfoHead != null && gyInfoHead.InnerText == "No data available yet.")
-				return new GraveyardData
-				{
-					Graveyard = new List<GraveyardEntry>(),
-					IsPrivate = false,
-					GraveyardCount = -1,
-					NoDataAvailable = true
-				};
+			{
+				returnData.Status = "NO_DATA_AVAILABLE";
+				return returnData;
+			}
 
 			var numGraveyards = 0;
 			if (gyInfoPara != null && !gyInfoPara.InnerText.Contains("We haven"))
@@ -50,27 +50,15 @@ namespace RealmEyeNET.Scraper
 					.Replace(",", "")
 					.Trim());
 
-			// no graveyard data
+			// no dead characters
 			if (numGraveyards == 0)
-				return new GraveyardData
-				{
-					IsPrivate = false,
-					GraveyardCount = -1,
-					NoDataAvailable = true,
-					Graveyard = new List<GraveyardEntry>()
-				};
+				return returnData;
 
-			var lowestPossibleAmt = Math.Floor((double)numGraveyards / 100) * 100;
+			var lowestPossibleAmt = Math.Floor((double) numGraveyards / 100) * 100;
 			if (limit != -1 && limit <= numGraveyards)
-				lowestPossibleAmt = Math.Floor((double)limit / 100) * 100;
+				lowestPossibleAmt = Math.Floor((double) limit / 100) * 100;
 
-			var returnData = new GraveyardData
-			{
-				NoDataAvailable = false,
-				GraveyardCount = numGraveyards,
-				IsPrivate = false,
-				Graveyard = new List<GraveyardEntry>()
-			};
+			returnData.GraveyardCount = numGraveyards;
 
 			// iterate over each page in the damn website :( 
 			for (int index = 1; index <= lowestPossibleAmt + 1; index += 100)
@@ -151,34 +139,30 @@ namespace RealmEyeNET.Scraper
 		public GraveyardSummaryData ScrapeGraveyardSummary()
 		{
 			var page = Browser.NavigateToPage(new Uri($"{GraveyardSummaryUrl}/{PlayerName}"));
+			var returnData = new GraveyardSummaryData
+			{
+				Status = "SUCCESS",
+				Properties = new GraveyardSummaryProperty[0],
+				StatsCharacters = new MaxedStatsByCharacters[0],
+				TechnicalProperties = new GraveyardTechnicalProperty[0]
+			};
 
 			var colMd = page.Html.CssSelect(".col-md-12").First();
-			if (colMd == null)
-				return new GraveyardSummaryData
-				{
-					IsPrivate = true,
-					Properties = new GraveyardSummaryProperty[0],
-					StatsCharacters = new MaxedStatsByCharacters[0],
-					TechnicalProperties = new GraveyardTechnicalProperty[0]
-				};
+			if (ProfileIsPrivate())
+			{
+				returnData.Status = "PRIVATE_PROFILE";
+				return returnData;
+			}
 
 			// this probably isnt the best way
 			// to do it.
 			var gyInfoHead = colMd.SelectSingleNode("//div[@class='col-md-12']/h3/text()");
 
 			if (gyInfoHead != null && gyInfoHead.InnerText == "No data available yet.")
-				return new GraveyardSummaryData
-				{
-					IsPrivate = false,
-					Properties = new GraveyardSummaryProperty[0],
-					StatsCharacters = new MaxedStatsByCharacters[0],
-					TechnicalProperties = new GraveyardTechnicalProperty[0]
-				};
-
-			var returnData = new GraveyardSummaryData
 			{
-				IsPrivate = false
-			};
+				returnData.Status = "NO_DATA_AVAILABLE";
+				return returnData;
+			}
 
 			var firstSummaryTable = page.Html
 				.CssSelect("#e")
@@ -199,7 +183,7 @@ namespace RealmEyeNET.Scraper
 				Max = long.Parse(row.SelectSingleNode("td[4]").InnerText),
 				Average = double.Parse(row.SelectSingleNode("td[5]").InnerText),
 				Min = long.Parse(row.SelectSingleNode("td[6]").InnerText)
-			}).ToArray();
+			}).ToList();
 
 			var secondSummaryTable = page.Html
 				.CssSelect("#f")
@@ -218,7 +202,7 @@ namespace RealmEyeNET.Scraper
 				Max = row.SelectSingleNode("td[3]").InnerText,
 				Average = row.SelectSingleNode("td[4]").InnerText,
 				Min = row.SelectSingleNode("td[5]").InnerText
-			}).ToArray();
+			}).ToList();
 
 			returnData.Properties = props.ToArray();
 			returnData.TechnicalProperties = techProps.ToArray();
@@ -268,10 +252,9 @@ namespace RealmEyeNET.Scraper
 					row.SelectSingleNode("td[10]").InnerText == string.Empty
 						? 0
 						: int.Parse(row.SelectSingleNode("td[10]").InnerText),
-
 				},
 				Total = int.Parse(row.SelectSingleNode("td[11]").InnerText)
-			}).ToArray();
+			}).ToList();
 
 			returnData.StatsCharacters = charInfo;
 
