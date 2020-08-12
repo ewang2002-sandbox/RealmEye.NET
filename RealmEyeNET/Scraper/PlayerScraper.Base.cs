@@ -1,15 +1,4 @@
 ﻿// NOTE: everything is relative to OuterHtml, NOT InnerHtml 
-// CONNECTION_ERROR
-// PRIVATE_PROFILE
-// SUCCESS
-// CHARACTERS_PRIVATE
-// PETS_PRIVATE
-// NO_PETS
-// NO_DATA_AVAILABLE
-// NAME_HISTORY_PRIVATE
-// GUILD_HISTORY_PRIVATE
-// RANK_HISTORY_PRIVATE
-
 using System;
 using System.Linq;
 using ScrapySharp.Extensions;

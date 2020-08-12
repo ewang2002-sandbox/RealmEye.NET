@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using RealmEyeNET.Constants;
 using RealmEyeNET.Definition;
 using ScrapySharp.Extensions;
 using static RealmEyeNET.Constants.RealmEyeUrl;
@@ -20,14 +21,14 @@ namespace RealmEyeNET.Scraper
 			var page = Browser.NavigateToPage(new Uri($"{GraveyardUrl}/{PlayerName}"));
 			var returnData = new GraveyardData
 			{
-				Status = "SUCCESS",
+				Status = ApiStatusCode.Success,
 				GraveyardCount = -1,
 				Graveyard = new List<GraveyardEntry>()
 			};
 
 			if (ProfileIsPrivate())
 			{
-				returnData.Status = "PRIVATE_PROFILE";
+				returnData.Status = ApiStatusCode.PrivateProfile;
 				return returnData;
 			}
 
@@ -38,10 +39,7 @@ namespace RealmEyeNET.Scraper
 			var gyInfoHead = colMd.SelectSingleNode("//div[@class='col-md-12']/h3/text()");
 
 			if (gyInfoHead != null && gyInfoHead.InnerText == "No data available yet.")
-			{
-				returnData.Status = "NO_DATA_AVAILABLE";
 				return returnData;
-			}
 
 			var numGraveyards = 0;
 			if (gyInfoPara != null && !gyInfoPara.InnerText.Contains("We haven"))
@@ -141,7 +139,7 @@ namespace RealmEyeNET.Scraper
 			var page = Browser.NavigateToPage(new Uri($"{GraveyardSummaryUrl}/{PlayerName}"));
 			var returnData = new GraveyardSummaryData
 			{
-				Status = "SUCCESS",
+				Status = ApiStatusCode.Success,
 				Properties = new GraveyardSummaryProperty[0],
 				StatsCharacters = new MaxedStatsByCharacters[0],
 				TechnicalProperties = new GraveyardTechnicalProperty[0]
@@ -150,7 +148,7 @@ namespace RealmEyeNET.Scraper
 			var colMd = page.Html.CssSelect(".col-md-12").First();
 			if (ProfileIsPrivate())
 			{
-				returnData.Status = "PRIVATE_PROFILE";
+				returnData.Status = ApiStatusCode.PrivateProfile;
 				return returnData;
 			}
 
@@ -159,10 +157,7 @@ namespace RealmEyeNET.Scraper
 			var gyInfoHead = colMd.SelectSingleNode("//div[@class='col-md-12']/h3/text()");
 
 			if (gyInfoHead != null && gyInfoHead.InnerText == "No data available yet.")
-			{
-				returnData.Status = "NO_DATA_AVAILABLE";
 				return returnData;
-			}
 
 			var firstSummaryTable = page.Html
 				.CssSelect("#e")

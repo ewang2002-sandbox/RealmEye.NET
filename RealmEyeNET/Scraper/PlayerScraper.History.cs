@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using RealmEyeNET.Constants;
 using RealmEyeNET.Definition;
 using ScrapySharp.Extensions;
 using static RealmEyeNET.Constants.RealmEyeUrl;
@@ -19,13 +20,13 @@ namespace RealmEyeNET.Scraper
 
 			var returnData = new NameHistoryData
 			{
-				Status = "SUCCESS",
+				Status = ApiStatusCode.Success,
 				NameHistory = new List<NameHistoryEntry>()
 			};
 
 			if (ProfileIsPrivate())
 			{
-				returnData.Status = "PRIVATE_PROFILE";
+				returnData.Status = ApiStatusCode.PrivateProfile;
 				return returnData;
 			}
 
@@ -37,7 +38,7 @@ namespace RealmEyeNET.Scraper
 			var hiddenTxtHeader = colMd.SelectSingleNode("//div[@class='col-md-12']/h3/text()");
 			if (hiddenTxtHeader != null && hiddenTxtHeader.InnerText.Contains("Name history is hidden"))
 			{
-				returnData.Status = "NAME_HISTORY_PRIVATE";
+				returnData.Status = ApiStatusCode.PrivateNameHistory;
 				return returnData;
 			}
 
@@ -74,13 +75,13 @@ namespace RealmEyeNET.Scraper
 
 			var returnData = new RankHistoryData
 			{
-				Status = "SUCCESS",
+				Status = ApiStatusCode.Success,
 				RankHistory = new List<RankHistoryEntry>()
 			};
 
 			if (ProfileIsPrivate())
 			{
-				returnData.Status = "PRIVATE_PROFILE";
+				returnData.Status = ApiStatusCode.PrivateProfile;
 				return returnData;
 			}
 
@@ -89,7 +90,7 @@ namespace RealmEyeNET.Scraper
 			var hiddenTxtHeader = colMd.SelectSingleNode("//div[@class='col-md-12']/h3/text()");
 			if (hiddenTxtHeader != null && hiddenTxtHeader.InnerText.Contains("Rank history is hidden"))
 			{
-				returnData.Status = "RANK_HISTORY_PRIVATE";
+				returnData.Status = ApiStatusCode.PrivateRankHistory;
 				return returnData;
 			}
 
@@ -128,13 +129,13 @@ namespace RealmEyeNET.Scraper
 
 			var returnData = new GuildHistoryData
 			{
-				Status = "SUCCESS",
+				Status = ApiStatusCode.Success,
 				GuildHistory = new List<GuildHistoryEntry>()
 			};
 
 			if (ProfileIsPrivate())
 			{
-				returnData.Status = "PRIVATE_PROFILE";
+				returnData.Status = ApiStatusCode.PrivateProfile;
 				return returnData;
 			}
 
@@ -146,7 +147,7 @@ namespace RealmEyeNET.Scraper
 			var hiddenTxtHeader = colMd.SelectSingleNode("//div[@class='col-md-12']/h3/text()");
 			if (hiddenTxtHeader != null && hiddenTxtHeader.InnerText.Contains("Guild history is hidden"))
 			{
-				returnData.Status = "GUILD_HISTORY_PRIVATE";
+				returnData.Status = ApiStatusCode.PrivateGuildHistory;
 				return returnData;
 			}
 

@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using RealmEyeNET.Constants;
 
 namespace RealmEyeNET.Definition
 {
 	public struct PetYardData
 	{
-		public string Status { get; set; }
+		public ApiStatusCode Status { get; set; }
 		public IList<PetEntry> Pets { get; set; }
 	}
 

@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using RealmEyeNET.Constants;
 
 namespace RealmEyeNET.Definition
 {
 	public class GraveyardData
 	{
-		public string Status { get; set; }
+		public ApiStatusCode Status { get; set; }
 		public int GraveyardCount { get; set; }
 		public IList<GraveyardEntry> Graveyard { get; set; }
 	}

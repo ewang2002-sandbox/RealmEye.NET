@@ -1,7 +1,10 @@
-﻿namespace RealmEyeNET.Definition
+﻿using RealmEyeNET.Constants;
+
+namespace RealmEyeNET.Definition
 {
 	public class PlayerData
 	{
+		public ApiStatusCode Status { get; set; }
 		public string Name { get; set; }
 		public int CharacterCount { get; set; }
 		public int Skins { get; set; }
@@ -14,8 +17,7 @@
 		public string FirstSeen { get; set; }
 		public string Created { get; set; }
 		public string LastSeen { get; set; }
-		public string[] Description { get; set; }
-		public string Status { get; set; }
+		public string[] Description { get; set; } 
 		public PlayerData() => CharacterCount = -1;
 	}
 }

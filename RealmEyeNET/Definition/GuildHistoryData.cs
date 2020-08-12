@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using RealmEyeNET.Constants;
 
 namespace RealmEyeNET.Definition
 {
 	public class GuildHistoryData
 	{
-		public string Status { get; set; }
+		public ApiStatusCode Status { get; set; }
 		public IList<GuildHistoryEntry> GuildHistory { get; set; }
 	}
 

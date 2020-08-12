@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using RealmEyeNET.Constants;
 using RealmEyeNET.Definition;
 using ScrapySharp.Extensions;
 using static RealmEyeNET.Constants.RealmEyeUrl;
@@ -20,13 +21,13 @@ namespace RealmEyeNET.Scraper
 			if (page == null)
 				return new PlayerData
 				{
-					Status = "CONNECTION_ERROR"
+					Status = ApiStatusCode.ConnectionError
 				};
 
 			if (ProfileIsPrivate())
 				return new PlayerData
 				{
-					Status = "PRIVATE_PROFILE"
+					Status = ApiStatusCode.PrivateProfile
 				};
 
 			// profile public
@@ -34,7 +35,7 @@ namespace RealmEyeNET.Scraper
 			var returnData = new PlayerData
 			{
 				Name = page.Html.CssSelect(".entity-name").First().InnerText,
-				Status = "SUCCESS"
+				Status = ApiStatusCode.Success
 			};
 
 			var summaryTable = page.Html.CssSelect(".summary").First();
@@ -113,7 +114,7 @@ namespace RealmEyeNET.Scraper
 
 			if (ProfileIsPrivate())
 			{
-				data.Status = "PRIVATE_PROFILE";
+				data.Status = ApiStatusCode.PrivateProfile;
 				return data;
 			}
 
@@ -128,7 +129,7 @@ namespace RealmEyeNET.Scraper
 					if (col.InnerText != "Characters")
 						continue;
 					charPrivate = false;
-					data.Status = "SUCCESS";
+					data.Status = ApiStatusCode.Success;
 					if (!int.TryParse(col.NextSibling.InnerText, out var result))
 						continue;
 					if (result == 0)
@@ -138,7 +139,7 @@ namespace RealmEyeNET.Scraper
 
 			if (charPrivate)
 			{
-				data.Status = "CHARACTERS_PRIVATE";
+				data.Status = ApiStatusCode.PrivateCharacters;
 				return data;
 			}
 
@@ -233,13 +234,13 @@ namespace RealmEyeNET.Scraper
 		{
 			var returnData = new PetYardData
 			{
-				Status = "SUCCESS",
+				Status = ApiStatusCode.Success,
 				Pets = new List<PetEntry>()
 			};
 
 			if (ProfileIsPrivate())
 			{
-				returnData.Status = "PRIVATE_PROFILE";
+				returnData.Status = ApiStatusCode.PrivateProfile;
 				return returnData;
 			}
 
@@ -251,7 +252,7 @@ namespace RealmEyeNET.Scraper
 			{
 				if (petsPrivateTag.InnerText == "Pets are hidden.")
 				{
-					returnData.Status = "PETS_PRIVATE";
+					returnData.Status = ApiStatusCode.PrivatePets;
 					return returnData;
 				}
 
