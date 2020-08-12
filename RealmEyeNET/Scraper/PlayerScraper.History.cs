@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using HtmlAgilityPack;
 using RealmEyeNET.Definition;
 using ScrapySharp.Extensions;
 using static RealmEyeNET.Constants.RealmEyeUrl;

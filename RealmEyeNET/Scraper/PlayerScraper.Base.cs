@@ -12,8 +12,6 @@
 
 using System;
 using System.Linq;
-using HtmlAgilityPack;
-using RealmEyeNET.Definition;
 using ScrapySharp.Extensions;
 using ScrapySharp.Network;
 using static RealmEyeNET.Constants.RealmEyeUrl;
