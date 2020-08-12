@@ -22,9 +22,9 @@ namespace RealmEyeNET.Definition
 
 	public class PetAbilityData
 	{
-		public bool IsUnlocked; 
-		public string AbilityName;
-		public int Level;
-		public bool IsMaxed;
+		public bool IsUnlocked { get; set; }
+		public string AbilityName { get; set; }
+		public int Level { get; set; }
+		public bool IsMaxed { get; set; }
 	}
 }
