@@ -12,5 +12,6 @@ namespace RealmEyeNET.Definition
 	{
 		public int Rank { get; set; }
 		public string Achieved { get; set; }
+		public string Date { get; set; }
 	}
 }
