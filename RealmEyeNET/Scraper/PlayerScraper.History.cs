@@ -106,5 +106,56 @@ namespace RealmEyeNET.Scraper
 
 			return returnData;
 		}
+
+		/// <summary>
+		/// Scrapes the guild history.
+		/// </summary>
+		/// <returns>The guild history.</returns>
+		public GuildHistoryData ScrapGuildHistory()
+		{
+			var page = Browser.NavigateToPage(new Uri($"{NameHistoryUrl}/{PlayerName}"));
+
+			var returnData = new GuildHistoryData
+			{
+				IsPrivate = false,
+				GuildHistory = new List<GuildHistoryEntry>()
+			};
+
+			var colMd = page.Html.CssSelect(".col-md-12").First();
+			var guildHistExists = colMd.SelectNodes("//div[@class='col-md-12']/p/text()");
+			if (guildHistExists.Count == 2 && guildHistExists.Last().InnerText.Contains("No guild changes detected."))
+				return returnData;
+
+			var hiddenTxtHeader = colMd.SelectSingleNode("//div[@class='col-md-12']/h3/text()");
+			if (hiddenTxtHeader != null && hiddenTxtHeader.InnerText.Contains("Guild history is hidden"))
+			{
+				returnData.IsPrivate = true;
+				return returnData;
+			}
+
+			var guildHistoryColl = page.Html
+				.CssSelect(".table-responsive")
+				.CssSelect(".table")
+				.First()
+				// <tbody><tr>
+				.SelectNodes("tbody/tr");
+
+			// td[1] => guild name
+			// td[2] => rank
+			// td[3] => from
+			// td[4] => to
+			foreach (var guildHistoryRow in guildHistoryColl)
+			{
+				returnData.GuildHistory.Add(new GuildHistoryEntry
+				{
+					GuildName = guildHistoryRow.SelectSingleNode("td[1]").FirstChild.Name,
+					GuildRank = guildHistoryRow.SelectSingleNode("td[2]").InnerText,
+					From = guildHistoryRow.SelectSingleNode("td[3]").InnerText,
+					To = guildHistoryRow.SelectSingleNode("td[4]").InnerText
+				});
+			}
+
+			return returnData;
+		}
 	}
 }

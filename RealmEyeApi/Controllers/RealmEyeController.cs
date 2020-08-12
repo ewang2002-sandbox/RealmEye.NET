@@ -59,5 +59,25 @@ namespace RealmEyeApi.Controllers
 				.ScrapeGraveyardSummary();
 			return new JsonResult(gys);
 		}
+
+		public JsonResult GetNameHistory(string name)
+		{
+			var nh = new PlayerScraper(name)
+				.ScrapeNameHistory();
+			return new JsonResult(nh);
+		}
+
+		public JsonResult GetGuildHistory(string name)
+		{
+			var gh = new PlayerScraper(name)
+				.ScrapGuildHistory();
+			return new JsonResult(gh);
+		}
+		public JsonResult GetRankHistory(string name)
+		{
+			var rh = new PlayerScraper(name)
+				.ScrapeRankHistory();
+			return new JsonResult(rh);
+		}
 	}
 }
