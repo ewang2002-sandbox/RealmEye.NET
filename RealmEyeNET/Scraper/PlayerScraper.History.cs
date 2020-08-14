@@ -141,7 +141,9 @@ namespace RealmEyeNET.Scraper
 
 			var colMd = page.Html.CssSelect(".col-md-12").First();
 			var guildHistExists = colMd.SelectNodes("//div[@class='col-md-12']/h3/text()");
-			if (guildHistExists.Count == 2 && guildHistExists.Last().InnerText.Contains("No guild changes detected."))
+			if (guildHistExists != null 
+			    && guildHistExists.Count == 2 
+			    && guildHistExists.Last().InnerText.Contains("No guild changes detected."))
 				return returnData;
 
 			var hiddenTxtHeader = colMd.SelectSingleNode("//div[@class='col-md-12']/h3/text()");

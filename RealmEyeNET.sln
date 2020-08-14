@@ -7,7 +7,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RealmEyeNET", "RealmEyeNET\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RealmEyeTest", "RealmEyeTest\RealmEyeTest.csproj", "{4859466D-1DC0-4AE5-A7C9-64A5EDC2F046}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RealmEyeApi", "RealmEyeApi\RealmEyeApi.csproj", "{B7D1AA87-12F9-4F8D-8357-EB7820356AED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RealmEyeApi", "RealmEyeApi\RealmEyeApi.csproj", "{B7D1AA87-12F9-4F8D-8357-EB7820356AED}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{052C1D8B-0749-44E8-9BA3-8E75FD4E9D63}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
