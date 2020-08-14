@@ -25,6 +25,9 @@ While both APIs have done an amazing job, the developers that have worked on the
 - [RealmEyeTest](https://github.com/ewang2002/RealmEye.NET/tree/master/RealmEyeTest): A simple Console application designed solely for testing the RealmEyeNET project.
 
 ## API Endpoints
+<details>
+<summary>Click Here!</summary>
+<br>
 There are several endpoints that allow you to access various sections of someone's RealmEye profile. Upon sending a request, the API will scrape data from RealmEye and return the scrapped data in a JSON format.
 
 The base URL is shown below.
@@ -49,6 +52,7 @@ basics/{name}
 <details>
 <summary>Example</summary>
 <br>
+```
 {
     "status": 0,
     "name": "Opre",
@@ -65,6 +69,7 @@ basics/{name}
     "lastSeen": "2020-08-14 03:26:36 at USWest3 as Huntress",
     "description": []
 }
+```
 </details>
 
 
@@ -82,6 +87,7 @@ char/{name}
 <details>
 <summary>Example</summary>
 <br>
+```
 {
     "status": 0,
     "characters": [
@@ -138,6 +144,7 @@ char/{name}
         }
     ]
 }
+```
 </details>
 
 
@@ -155,6 +162,7 @@ pets/{name}
 <details>
 <summary>Example</summary>
 <br>
+```
 {
     "status": 0,
     "pets": [
@@ -216,6 +224,7 @@ pets/{name}
         }
     ]
 }
+```
 </details>
 
 
@@ -234,6 +243,7 @@ graveyard/{name}/{amount?}
 <details>
 <summary>Example</summary>
 <br>
+```
 {
     "status": 0,
     "graveyardCount": 1010,
@@ -291,6 +301,7 @@ graveyard/{name}/{amount?}
         }
     ]
 }
+```
 </details>
 
 
@@ -308,6 +319,7 @@ graveyardsummary/{name}
 <details>
 <summary>Example</summary>
 <br>
+```
 {
     "status": 0,
     "properties": [
@@ -446,6 +458,7 @@ graveyardsummary/{name}
         }
     ]
 }
+```
 </details>
 
 
@@ -469,6 +482,7 @@ namehistory/{name}
 <details>
 <summary>Example (Name Changes)</summary>
 <br>
+```
 {
     "status": 0,
     "nameHistory": [
@@ -489,6 +503,7 @@ namehistory/{name}
         }
     ]
 }
+```
 </details>
 
 
@@ -506,6 +521,7 @@ guildhistory/{name}
 <details>
 <summary>Example</summary>
 <br>
+```
 {
     "status": 0,
     "guildHistory": [
@@ -553,6 +569,8 @@ guildhistory/{name}
         }
     ]
 }
+```
+</details>
 </details>
 
 
@@ -570,6 +588,7 @@ rankhistory/{name}
 <details>
 <summary>Example</summary>
 <br>
+```
 {
     "status": 0,
     "rankHistory": [
@@ -590,6 +609,7 @@ rankhistory/{name}
         }
     ]
 }
+```
 </details>
 
 ## Setup Guide
