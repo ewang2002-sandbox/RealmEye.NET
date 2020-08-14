@@ -7,12 +7,15 @@ NOTE: At the moment, this API is in testing and IS expected to break. Do not rel
 <details>
 <summary>Click Here</summary>
 <br>
+
 There are several other hosted APIs online; however, those APIs have either reached their end of life or are approaching it.
+
 - Tiffit's API: Taken down on June 2nd, 2020.
 	- Reason: "I've decided to stop maintaining the API since it stopped being something that I did for fun and more of a 'job.'"
 - [Nightfirecat's API](https://github.com/Nightfirecat/RealmEye-API): Pretty outdated and expected to reach end-of-life soon (from the developer himself).
 
 While both APIs have done an amazing job, the developers that have worked on these APIs have sadly moved on to pursue other interests. I have decided, then, to write my own API so I can continue to use it for my [bot](https://github.com/DungeoneerExalt/ZeroRaidBot/).
+
 </details>
 
 ## Technologies
@@ -25,9 +28,10 @@ While both APIs have done an amazing job, the developers that have worked on the
 - [RealmEyeTest](https://github.com/ewang2002/RealmEye.NET/tree/master/RealmEyeTest): A simple Console application designed solely for testing the RealmEyeNET project.
 
 ## API Endpoints
-<details>
+<detail>
 <summary>Click Here!</summary>
 <br>
+
 There are several endpoints that allow you to access various sections of someone's RealmEye profile. Upon sending a request, the API will scrape data from RealmEye and return the scrapped data in a JSON format.
 
 The base URL is shown below.
@@ -571,7 +575,6 @@ guildhistory/{name}
 }
 ```
 </details>
-</details>
 
 
 ### Rank History Information
@@ -610,6 +613,7 @@ rankhistory/{name}
     ]
 }
 ```
+</details>
 </details>
 
 ## Setup Guide
