@@ -34,6 +34,8 @@ api/realmeye/
 
 Below are all available endpoints. For the examples, I will be using the IGN `Opre`. Do note that the examples may be shortened.
 
+
+### Basic Data
 ```
 basics/{name}
 ```
@@ -65,6 +67,8 @@ basics/{name}
 }
 </details>
 
+
+### Character Data
 ```
 char/{name}
 ```
@@ -136,6 +140,8 @@ char/{name}
 }
 </details>
 
+
+### Pet Data
 ```
 pets/{name}
 ```
@@ -212,6 +218,8 @@ pets/{name}
 }
 </details>
 
+
+### Graveyard Data
 ```
 graveyard/{name}/{amount?}
 ```
@@ -285,6 +293,8 @@ graveyard/{name}/{amount?}
 }
 </details>
 
+
+## Graveyard Summary 
 ```
 graveyardsummary/{name}
 ```
@@ -438,6 +448,8 @@ graveyardsummary/{name}
 }
 </details>
 
+
+### Name History Information
 ```
 namehistory/{name}
 ```
@@ -479,6 +491,8 @@ namehistory/{name}
 }
 </details>
 
+
+### Guild History Information
 ```
 guildhistory/{name}
 ```
@@ -541,6 +555,8 @@ guildhistory/{name}
 }
 </details>
 
+
+### Rank History Information
 ```
 rankhistory/{name}
 ```
