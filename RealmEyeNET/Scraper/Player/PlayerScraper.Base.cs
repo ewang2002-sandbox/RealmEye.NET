@@ -1,11 +1,12 @@
 ﻿// NOTE: everything is relative to OuterHtml, NOT InnerHtml 
+
 using System;
 using System.Linq;
 using ScrapySharp.Extensions;
 using ScrapySharp.Network;
 using static RealmEyeNET.Constants.RealmEyeUrl;
 
-namespace RealmEyeNET.Scraper
+namespace RealmEyeNET.Scraper.Player
 {
 	public partial class PlayerScraper
 	{

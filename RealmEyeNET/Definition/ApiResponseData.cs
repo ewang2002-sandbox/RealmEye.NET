@@ -1,4 +1,4 @@
-﻿using RealmEyeNET.Constants;
+﻿using RealmEyeNET.ApiReturnCode;
 
 namespace RealmEyeNET.Definition
 {

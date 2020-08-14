@@ -2,7 +2,7 @@
 using RealmEyeNET.Constants;
 using RealmEyeNET.Definition;
 
-namespace RealmEyeNET.Error
+namespace RealmEyeNET.ApiReturnCode
 {
 	public class ApiResponse
 	{

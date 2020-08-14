@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Runtime.Caching.Hosting;
-using RealmEyeNET.Scraper;
+using RealmEyeNET.Scraper.Player;
 
 namespace RealmEyeTest
 {
@@ -9,7 +9,7 @@ namespace RealmEyeTest
 	{
 		static void Main(string[] args)
 		{
-			var p = new PlayerScraper("").ScrapeGraveyardSummary();
+			var p = new PlayerScraper("consolemc").ScrapePlayerProfile();
 		}
 	}
 }

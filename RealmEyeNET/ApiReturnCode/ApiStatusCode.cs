@@ -1,4 +1,4 @@
-﻿namespace RealmEyeNET.Constants
+﻿namespace RealmEyeNET.ApiReturnCode
 {
 	public enum ApiStatusCode
 	{

@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using RealmEyeNET.Constants;
+using RealmEyeNET.ApiReturnCode;
 using RealmEyeNET.Definition;
+using RealmEyeNET.Definition.Player;
 using ScrapySharp.Extensions;
 using static RealmEyeNET.Constants.RealmEyeUrl;
 
-namespace RealmEyeNET.Scraper
+namespace RealmEyeNET.Scraper.Player
 {
 	public partial class PlayerScraper
 	{

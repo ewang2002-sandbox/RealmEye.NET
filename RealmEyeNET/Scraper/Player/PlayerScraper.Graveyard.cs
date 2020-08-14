@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using RealmEyeNET.Constants;
+using RealmEyeNET.ApiReturnCode;
 using RealmEyeNET.Definition;
+using RealmEyeNET.Definition.Player;
 using ScrapySharp.Extensions;
 using static RealmEyeNET.Constants.RealmEyeUrl;
 
-namespace RealmEyeNET.Scraper
+namespace RealmEyeNET.Scraper.Player
 {
 	public partial class PlayerScraper
 	{
@@ -18,6 +19,10 @@ namespace RealmEyeNET.Scraper
 		/// <returns>The graveyard.</returns>
 		public GraveyardData ScrapGraveyard(int limit = -1)
 		{
+			// no point in getting less than -1, right? 
+			if (limit < -1)
+				limit = -1; 
+
 			var page = Browser.NavigateToPage(new Uri($"{GraveyardUrl}/{PlayerName}"));
 			var returnData = new GraveyardData
 			{

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using RealmEyeNET.Constants;
+using RealmEyeNET.ApiReturnCode;
 
-namespace RealmEyeNET.Definition
+namespace RealmEyeNET.Definition.Player
 {
 	public class GraveyardSummaryData
 	{

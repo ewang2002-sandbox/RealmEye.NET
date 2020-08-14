@@ -5,16 +5,15 @@ NOTE: At the moment, this API is in testing and IS expected to break. Do not rel
 
 ## Purpose
 <details>
-<summary>Click Here</summary>
+<summary>Click Here!</summary>
 <br>
 
-There are several other hosted APIs online; however, those APIs have either reached their end of life or are approaching it.
+Currently, there are two major public RealmEye APIs. However, the APIs have either been shut down or is in the process of shutting down. 
 
-- Tiffit's API: Taken down on June 2nd, 2020.
-	- Reason: "I've decided to stop maintaining the API since it stopped being something that I did for fun and more of a 'job.'"
-- [Nightfirecat's API](https://github.com/Nightfirecat/RealmEye-API): Pretty outdated and expected to reach end-of-life soon (from the developer himself).
+- Tiffit's API: Taken down on June 2nd, 2020 as the developer quit Realm and though hosting the API was more of a job than anything else. 
+- [Nightfirecat's API](https://github.com/Nightfirecat/RealmEye-API): Pretty outdated and expected to reach end-of-life soon (__apparently__, from the developer himself).
 
-While both APIs have done an amazing job, the developers that have worked on these APIs have sadly moved on to pursue other interests. I have decided, then, to write my own API so I can continue to use it for my [bot](https://github.com/DungeoneerExalt/ZeroRaidBot/).
+While both APIs have done an amazing job, the developers that have worked on these APIs have sadly moved on to pursue other interests. I have decided, then, to write my own API so I can continue to use it for my [bot](https://github.com/DungeoneerExalt/ZeroRaidBot/). Eventually, I will host the API and release it for the public to use. 
 
 </details>
 
@@ -23,12 +22,18 @@ While both APIs have done an amazing job, the developers that have worked on the
 - ASP.NET
 
 ## Project Template
-- [RealmEyeApi](https://github.com/ewang2002/RealmEye.NET/tree/master/RealmEyeApi): The ASP.NET project that will be used to host the RealmEye API.
-- [RealmEyeNET](https://github.com/ewang2002/RealmEye.NET/tree/master/RealmEyeNET): The .NET Core project containing code that scrapes RealmEye's website. 
+The project is divided into three solutions -- two solutions are actively in use. 
+
+- [RealmEyeApi](https://github.com/ewang2002/RealmEye.NET/tree/master/RealmEyeApi): The ASP.NET project that will be used to host the RealmEye API (RealmEyeNET). 
+- [RealmEyeNET](https://github.com/ewang2002/RealmEye.NET/tree/master/RealmEyeNET): The .NET Core project containing code that scrapes RealmEye's website. This is the "main" project. 
 - [RealmEyeTest](https://github.com/ewang2002/RealmEye.NET/tree/master/RealmEyeTest): A simple Console application designed solely for testing the RealmEyeNET project.
 
 ## Project Progress
-### Profile Page
+<details>
+<summary>Click Here!</summary>
+<br>
+
+#### Profile Page
 - [x] Basics
 - [x] Character Information 
 - [ ] Skins
@@ -42,7 +47,7 @@ While both APIs have done an amazing job, the developers that have worked on the
 - [x] Guild History
 - [ ] Pet Graveyard
 
-### Guild Page
+#### Guild Page
 - [ ] Main Page
 - [ ] Members List
 - [ ] Top Characters
@@ -52,18 +57,25 @@ While both APIs have done an amazing job, the developers that have worked on the
 - [ ] Former Members
 - [ ] Server Activity
 
-### Mystery Boxes
+#### Mystery Boxes
 - [ ] Main Page
 
-### Trading
+#### Trading
 - [ ] Item to ID & ID to Item Conversion
 - [ ] Offers Page
+
+### Production
+- [ ] Get Hosting for API
+- [ ] Public Release
+
+</details>
 
 ## Setup Guide
 This is coming soon!
 
 ## Support the Project
-The best way to support this project is to star (⭐) it. You might also consider looking through the code and seeing if something could use optimizing (most of the code is written in the middle of the night).
+- The best way to support this project is to star (⭐) it.
+- If you have feedback, I would love to hear it! Submit an Issue and I'll look into it as soon as possible.
 
-## License
+## License (MIT)
 Please review the license file in this repository.

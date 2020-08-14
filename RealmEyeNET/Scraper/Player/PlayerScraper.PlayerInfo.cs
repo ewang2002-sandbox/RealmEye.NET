@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using RealmEyeNET.Constants;
-using RealmEyeNET.Definition;
+using RealmEyeNET.ApiReturnCode;
+using RealmEyeNET.Definition.Player;
 using ScrapySharp.Extensions;
 using static RealmEyeNET.Constants.RealmEyeUrl;
 
-namespace RealmEyeNET.Scraper
+namespace RealmEyeNET.Scraper.Player
 {
 	public partial class PlayerScraper
 	{
@@ -88,15 +88,16 @@ namespace RealmEyeNET.Scraper
 			var mainElement = page.Html.CssSelect(".col-md-12");
 			// #d is id = "d" (in html)
 			var descriptionTable = mainElement.CssSelect("#d").First();
-			if (descriptionTable.FirstChild.Attributes["help"] == null)
-				returnData.Description = new string[0];
-			else
+			var noDesc = descriptionTable.CssSelect(".help");
+			if (!noDesc.Any())
 			{
 				returnData.Description = new string[3];
 				returnData.Description[0] = descriptionTable.FirstChild.InnerText;
 				returnData.Description[1] = descriptionTable.FirstChild.NextSibling.InnerText;
 				returnData.Description[2] = descriptionTable.FirstChild.NextSibling.NextSibling.InnerText;
 			}
+			else
+				returnData.Description = new string[0];
 
 			return returnData;
 		}

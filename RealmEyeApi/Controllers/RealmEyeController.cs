@@ -1,9 +1,8 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using RealmEyeNET.Constants;
-using RealmEyeNET.Error;
-using RealmEyeNET.Scraper;
+using RealmEyeNET.ApiReturnCode;
+using RealmEyeNET.Scraper.Player;
 
 namespace RealmEyeApi.Controllers
 {
@@ -140,7 +139,7 @@ namespace RealmEyeApi.Controllers
 			}
 			catch (Exception e)
 			{
-				_logger.Log(LogLevel.Error, e, $"Error Occurred @ GetNameHistory (Name: {name})");
+				_logger.Log(LogLevel.Error, e, $"Error Occurred @ GetGuildHistory (Name: {name})");
 				return new JsonResult(new ApiResponse(ApiStatusCode.UnspecifiedError).GetMessage());
 			}
 		}
@@ -158,7 +157,7 @@ namespace RealmEyeApi.Controllers
 			}
 			catch (Exception e)
 			{
-				_logger.Log(LogLevel.Error, e, $"Error Occurred @ GetNameHistory (Name: {name})");
+				_logger.Log(LogLevel.Error, e, $"Error Occurred @ GetRankHistory (Name: {name})");
 				return new JsonResult(new ApiResponse(ApiStatusCode.UnspecifiedError).GetMessage());
 			}
 		}
