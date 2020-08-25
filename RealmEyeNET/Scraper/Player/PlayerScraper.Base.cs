@@ -25,10 +25,7 @@ namespace RealmEyeNET.Scraper.Player
 		/// Creates a new PlayerScrapper object. This object will give you the ability to scrape various parts of a RealmEye profile.
 		/// </summary>
 		/// <param name="name">The in-game name to look for.</param>
-		public PlayerScraper(string name)
-		{
-			PlayerName = name;
-		}
+		public PlayerScraper(string name) => PlayerName = name;
 
 		/// <summary>
 		/// Determines if the profile is private. 

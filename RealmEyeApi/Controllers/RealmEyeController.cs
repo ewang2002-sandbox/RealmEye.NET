@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using RealmEyeNET.ApiReturnCode;
@@ -22,8 +23,12 @@ namespace RealmEyeApi.Controllers
 		{
 			try
 			{
+				var sw = new Stopwatch();
+				sw.Start();
 				var profile = new PlayerScraper(name)
 					.ScrapePlayerProfile();
+				sw.Stop();
+				_logger.Log(LogLevel.Information, $"Scraped Basic Data for {name} in {sw.Elapsed.Milliseconds} MS.");
 				return profile.Status == ApiStatusCode.Success
 					? new JsonResult(profile)
 					: new JsonResult(new ApiResponse(profile.Status).GetMessage());
@@ -40,8 +45,14 @@ namespace RealmEyeApi.Controllers
 		{
 			try
 			{
+				var sw = new Stopwatch();
+				sw.Start();
 				var characterData = new PlayerScraper(name)
 					.ScrapCharacterInformation();
+
+				sw.Stop();
+				_logger.Log(LogLevel.Information,
+					$"Scraped Character Data for {name} in {sw.Elapsed.Milliseconds} MS.");
 				return characterData.Status == ApiStatusCode.Success
 					? new JsonResult(characterData)
 					: new JsonResult(new ApiResponse(characterData.Status).GetMessage());
@@ -58,12 +69,15 @@ namespace RealmEyeApi.Controllers
 		{
 			try
 			{
+				var sw = new Stopwatch();
+				sw.Start();
 				var pets = new PlayerScraper(name)
 					.ScrapPetYard();
+				sw.Stop();
+				_logger.Log(LogLevel.Information, $"Scraped Pet Yard for {name} in {sw.Elapsed.Milliseconds} MS.");
 				return pets.Status == ApiStatusCode.Success
 					? new JsonResult(pets)
 					: new JsonResult(new ApiResponse(pets.Status).GetMessage());
-
 			}
 			catch (Exception e)
 			{
@@ -77,8 +91,12 @@ namespace RealmEyeApi.Controllers
 		{
 			try
 			{
+				var sw = new Stopwatch();
+				sw.Start();
 				var gy = new PlayerScraper(name)
 					.ScrapGraveyard(amount);
+				sw.Stop();
+				_logger.Log(LogLevel.Information, $"Scraped Graveyard for {name} in {sw.Elapsed.Milliseconds} MS. Amount: {amount}");
 				return gy.Status == ApiStatusCode.Success
 					? new JsonResult(gy)
 					: new JsonResult(new ApiResponse(gy.Status).GetMessage());
@@ -95,8 +113,12 @@ namespace RealmEyeApi.Controllers
 		{
 			try
 			{
+				var sw = new Stopwatch();
+				sw.Start();
 				var gys = new PlayerScraper(name)
 					.ScrapeGraveyardSummary();
+				sw.Stop();
+				_logger.Log(LogLevel.Information, $"Scraped Graveyard Summary for {name} in {sw.Elapsed.Milliseconds} MS.");
 				return gys.Status == ApiStatusCode.Success
 					? new JsonResult(gys)
 					: new JsonResult(new ApiResponse(gys.Status).GetMessage());
@@ -113,8 +135,12 @@ namespace RealmEyeApi.Controllers
 		{
 			try
 			{
+				var sw = new Stopwatch();
+				sw.Start();
 				var nh = new PlayerScraper(name)
 					.ScrapeNameHistory();
+				sw.Stop();
+				_logger.Log(LogLevel.Information, $"Scraped Name History for {name} in {sw.Elapsed.Milliseconds} MS.");
 				return nh.Status == ApiStatusCode.Success
 					? new JsonResult(nh)
 					: new JsonResult(new ApiResponse(nh.Status).GetMessage());
@@ -131,8 +157,12 @@ namespace RealmEyeApi.Controllers
 		{
 			try
 			{
+				var sw = new Stopwatch();
+				sw.Start();
 				var gh = new PlayerScraper(name)
 					.ScrapGuildHistory();
+				sw.Stop();
+				_logger.Log(LogLevel.Information, $"Scraped Guild History for {name} in {sw.Elapsed.Milliseconds} MS.");
 				return gh.Status == ApiStatusCode.Success
 					? new JsonResult(gh)
 					: new JsonResult(new ApiResponse(gh.Status).GetMessage());
@@ -149,8 +179,12 @@ namespace RealmEyeApi.Controllers
 		{
 			try
 			{
+				var sw = new Stopwatch();
+				sw.Start();
 				var rh = new PlayerScraper(name)
 					.ScrapeRankHistory();
+				sw.Stop();
+				_logger.Log(LogLevel.Information, $"Scraped Rank History for {name} in {sw.Elapsed.Milliseconds} MS.");
 				return rh.Status == ApiStatusCode.Success
 					? new JsonResult(rh)
 					: new JsonResult(new ApiResponse(rh.Status).GetMessage());

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using RealmEyeNET.ApiReturnCode;
-using RealmEyeNET.Definition;
 using RealmEyeNET.Definition.Player;
 using ScrapySharp.Extensions;
 using static RealmEyeNET.Constants.RealmEyeUrl;
