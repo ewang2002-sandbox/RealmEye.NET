@@ -160,6 +160,10 @@ namespace RealmEyeNET.Scraper.Player
 			// td[10] => stats
 			foreach (var characterRow in charTable)
 			{
+				var petId = int.Parse(characterRow.SelectSingleNode("td[1]")
+					.FirstChild
+					.Attributes["data-item"]
+					.Value);
 				var characterType = characterRow.SelectSingleNode("td[3]").InnerText;
 				var level = int.Parse(characterRow.SelectSingleNode("td[4]").InnerText);
 				var cqc = int.Parse(characterRow.SelectSingleNode("td[5]").InnerText.Split('/')[0]);
@@ -200,6 +204,7 @@ namespace RealmEyeNET.Scraper.Player
 
 				data.Characters.Add(new CharacterEntry
 				{
+					ActivePetId = petId,
 					CharacterType = characterType,
 					ClassQuestsCompleted = cqc,
 					EquipmentData = characterEquipment.ToArray(),
@@ -353,7 +358,7 @@ namespace RealmEyeNET.Scraper.Player
 
 				returnData.Pets.Add(new PetEntry
 				{
-					ActivePetSkinId = petId,
+					ActivePetId = petId,
 					Family = family,
 					MaxLevel = maxLevel,
 					Name = petName,

@@ -12,7 +12,7 @@ namespace RealmEyeNET.Definition.Player
 	public class PetEntry
 	{
 		// TODO make this into readable str
-		public int ActivePetSkinId { get; set; }
+		public int ActivePetId { get; set; }
 		public string Name { get; set; }
 		public string Rarity { get; set; }
 		public string Family { get; set; }

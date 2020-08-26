@@ -11,6 +11,8 @@ namespace RealmEyeNET.Definition.Player
 
 	public class CharacterEntry
 	{
+		// TODO make this into readable str
+		public int ActivePetId { get; set; }
 		public string CharacterType { get; set; }
 		public int Level { get; set; }
 		public int ClassQuestsCompleted { get; set; }
@@ -25,13 +27,13 @@ namespace RealmEyeNET.Definition.Player
 
 	public class Stats
 	{
-		public int Health;
-		public int Magic;
-		public int Attack;
-		public int Defense;
-		public int Speed;
-		public int Vitality;
-		public int Wisdom;
-		public int Dexterity;
+		public int Health { get; set; }
+		public int Magic { get; set; }
+		public int Attack { get; set; }
+		public int Defense { get; set; }
+		public int Speed { get; set; }
+		public int Vitality { get; set; }
+		public int Wisdom { get; set; }
+		public int Dexterity { get; set; }
 	}
 }
