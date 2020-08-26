@@ -160,10 +160,11 @@ namespace RealmEyeNET.Scraper.Player
 			// td[10] => stats
 			foreach (var characterRow in charTable)
 			{
-				var petId = int.Parse(characterRow.SelectSingleNode("td[1]")
-					.FirstChild
-					.Attributes["data-item"]
-					.Value);
+				var petIdRaw = characterRow.SelectSingleNode("td[1]").FirstChild;
+				var petId = petIdRaw == null
+					? -1
+					: int.Parse(petIdRaw.Attributes["data-item"].Value);
+
 				var characterType = characterRow.SelectSingleNode("td[3]").InnerText;
 				var level = int.Parse(characterRow.SelectSingleNode("td[4]").InnerText);
 				var cqc = int.Parse(characterRow.SelectSingleNode("td[5]").InnerText.Split('/')[0]);
